@@ -10,4 +10,12 @@ cd ${STEAMAPPDIR}
 echo "Starting Server"
 
 Xvfb :99 -screen 0 1x1x24 -nolisten tcp -nolisten unix &
-./CoreKeeperServer -batchmode -logfile /proc/self/fd/1
+./CoreKeeperServer \
+    -batchmode \
+    -gameid ${GAME_ID} \
+    -datapath ${DATA_PATH} \
+    -worldname ${WORLD_NAME} \
+    -world ${WORLD_ID} \
+    -worldseed ${WORLD_SEED} \
+    -maxplayers ${MAX_PLAYERS} \
+    -logfile /proc/self/fd/1

@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  core-keeper-ds-docker:
+    build: .
+    image: devidian/core-keeper-dedicated:latest
+    container_name: core-keeper-ds-docker
+    restart: unless-stopped
+    volumes:
+      # left side: your docker-host machine
+      # right side: the paths in the image (!!do not change!!)
+      - /appdata/core-keeper/dedicated:/home/steam/core-keeper-dedicated

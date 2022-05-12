@@ -1,7 +1,6 @@
 #!/bin/bash
 # VARIABLES
 export LD_LIBRARY_PATH="${STEAMAPPDIR}/linux64:$LD_LIBRARY_PATH:../Steamworks SDK Redist/linux64/"
-export DISPLAY=:99
 
 ${STEAMCMDDIR}/steamcmd.sh +force_install_dir ${STEAMAPPDIR} +login anonymous +app_update ${STEAMAPPID} validate +quit
 
@@ -9,7 +8,10 @@ cd ${STEAMAPPDIR}
 
 echo "Starting Server"
 
+rm -f /tmp/.X99-lock
+
 Xvfb :99 -screen 0 1x1x24 -nolisten tcp -nolisten unix &
+DISPLAY=:99 \
 ./CoreKeeperServer \
     -batchmode \
     -gameid ${GAME_ID} \

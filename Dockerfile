@@ -4,9 +4,11 @@ RUN apt update && apt upgrade -y &&\
     apt-get install -qq -y --install-recommends \
     xvfb
 
-ENV STEAMAPPID 1963720
-ENV STEAMAPP core-keeper
-ENV STEAMAPPDIR "${HOMEDIR}/${STEAMAPP}-dedicated"
+# Steamworks
+ENV STEAM_TOOL_ID 1007
+ENV STEAM_APP_ID 1963720
+ENV STEAM_APP_NAME core-keeper
+ENV STEAM_APP_DIR "${HOMEDIR}/${STEAM_APP_NAME}-dedicated"
 
 COPY entrypoint.sh ${HOMEDIR}/entrypoint.sh
 RUN chmod +x "${HOMEDIR}/entrypoint.sh" && chown -R "${USER}:${USER}" "${HOMEDIR}"
@@ -21,7 +23,7 @@ ENV GAME_ID="" \
 
 USER ${USER}
 
-VOLUME ${STEAMAPPDIR}
+VOLUME ${STEAM_APP_DIR}
 
 WORKDIR ${HOMEDIR}
 

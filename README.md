@@ -35,3 +35,7 @@ services:
 ```
 
 and run `docker-compose up -d`.
+
+# Issues, suggestions & contribution
+
+Please use [GitHub](https://github.com/Devidian/docker-core-keeper/issues)

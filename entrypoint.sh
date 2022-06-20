@@ -3,7 +3,7 @@
 export LD_LIBRARY_PATH="${STEAM_APP_DIR}/linux64:$LD_LIBRARY_PATH:../Steamworks SDK Redist/linux64/"
 export DISPLAY=:99
 
-${STEAM_CMD_DIR}/steamcmd.sh +force_install_dir ${STEAM_APP_DIR} +login anonymous +app_update ${STEAM_APP_ID} validate +app_update ${STEAM_TOOL_ID} validate +quit
+${STEAMCMDDIR}/steamcmd.sh +force_install_dir ${STEAM_APP_DIR} +login anonymous +app_update ${STEAM_APP_ID} validate +app_update ${STEAM_TOOL_ID} validate +quit
 
 cd ${STEAM_APP_DIR}
 

@@ -21,6 +21,7 @@ ENV GAME_ID="" \
 	WORLD_NAME="Core Keeper Dedicated Docker Server" \
 	WORLD_ID=0 \
 	WORLD_SEED=0 \
+	WORLD_MODE=0 \
 	MAX_PLAYERS=4 
 
 USER ${USER}

@@ -25,6 +25,8 @@ services:
       - WORLD_ID=0
       # The seed to use for a new world. Set to 0 to generate random seed.
       - WORLD_SEED=0
+      # Whether to use normal (0) or hard (1) mode for world.
+      - WORLD_MODE=0
       # Maximum number of players that will be allowed to connect to server.
       - MAX_PLAYERS=4
     # If you dont like to use a directory on the host just comment volumes section

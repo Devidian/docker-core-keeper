@@ -1,9 +1,5 @@
 FROM cm2network/steamcmd:root
 
-RUN apt update && apt upgrade -y &&\
-	apt-get install -qq -y --install-recommends \
-	xvfb
-
 # Steamworks
 ENV STEAM_TOOL_ID 1007
 ENV STEAM_APP_ID 1963720
@@ -24,7 +20,7 @@ ENV GAME_ID="" \
 	WORLD_MODE=0 \
 	MAX_PLAYERS=4 
 
-USER ${USER}
+# USER ${USER}
 
 VOLUME ${STEAM_APP_DIR}
 

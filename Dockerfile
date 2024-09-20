@@ -22,5 +22,9 @@ ENV GAME_ID="" \
 	WORLD_MODE=0 \
 	MAX_PLAYERS=4 
 
+RUN apt update && \
+	apt install -y \
+	libxi6 \
+	xvfb
 
 ENTRYPOINT ["./entrypoint.sh"]

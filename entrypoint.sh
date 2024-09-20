@@ -48,13 +48,19 @@ chmod +x "$exepath"
 
 DISPLAY=:99 LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$STEAM_APP_DIR/../Steamworks SDK Redist/linux64/" \
         "$exepath" -batchmode -logfile /proc/self/fd/1 \
+        -port ${SERVER_PORT} \
+        -maxplayers ${MAX_PLAYERS} \
+        -name ${SERVER_NAME} \
+        -password ${SERVER_PASSWORD} \
+        -public ${SERVER_PUBLIC} \
         -gameid ${GAME_ID} \
         -datapath ${DATA_PATH} \
         -worldname ${WORLD_NAME} \
         -world ${WORLD_ID} \
         -worldseed ${WORLD_SEED} \
         -worldmode ${WORLD_MODE} \
-        -maxplayers ${MAX_PLAYERS} "$@" &
+        -worldsize ${WORLD_SIZE} \
+        "$@" &
 
 ckpid=$!
 

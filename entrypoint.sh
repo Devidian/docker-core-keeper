@@ -13,27 +13,32 @@ echo "Starting _launch script"
 xvfbpid=""
 ckpid=""
 exepath="$STEAM_APP_DIR/CoreKeeperServer"
+requirements=( "libxi6" "xvfb" )
 
 echo "Execution path: $exepath"
 
 function kill_corekeeperserver {
-        if [[ ! -z "$ckpid" ]]; then
-                kill $ckpid
-                wait $ckpid
-        fi
-        if [[ ! -z "$xvfbpid" ]]; then
-                kill $xvfbpid
-                wait $xvfbpid
-        fi
+	if [[ ! -z "$ckpid" ]]; then
+		kill $ckpid
+		wait $ckpid
+	fi
+	if [[ ! -z "$xvfbpid" ]]; then
+		kill $xvfbpid
+		wait $xvfbpid
+	fi
 }
 
 trap kill_corekeeperserver EXIT
 
-if ! (dpkg -l xvfb >/dev/null) ; then
-    echo "Installing xvfb dependency..."
-    sleep 1
-    apt-get update -yy && apt-get install xvfb -yy
-fi
+for r in "${requirements[@]}"
+do
+	echo "Checking for required package: $r"
+	if ! (dpkg -l $r >/dev/null); then
+		echo "Installing missing package: $r"
+		sleep 1
+		$sudo apt-get update -yy && $sudo apt-get install -yy "$r"
+	fi
+done
 
 set -m
 

@@ -1,5 +1,7 @@
 FROM cm2network/steamcmd:root
 
+WORKDIR ${HOMEDIR}
+
 # Steamworks
 ENV STEAM_TOOL_ID 1007
 ENV STEAM_APP_ID 1963720
@@ -20,10 +22,5 @@ ENV GAME_ID="" \
 	WORLD_MODE=0 \
 	MAX_PLAYERS=4 
 
-# USER ${USER}
 
-VOLUME ${STEAM_APP_DIR}
-
-WORKDIR ${HOMEDIR}
-
-CMD ["bash", "entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]

@@ -1,0 +1,6 @@
+[Unit]
+Description=Back up Core Keeper dedicated server data
+
+[Service]
+Type=oneshot
+ExecStart=/docker/games/scripts/corekeeper-backup.sh

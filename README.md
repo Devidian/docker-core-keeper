@@ -1,48 +1,36 @@
 # Docker Container for Core Keeper Dedicated Server
 
-A dedicated server for `core keeper` based on `cm2network/steamcmd:root`
+A dedicated Core Keeper server based on `cm2network/steamcmd:root`. The entrypoint updates the dedicated server with SteamCMD before each launch.
 
-# How to run it
+## Run the server
 
-Best way is to use a composer file like this:
+Use [docker-compose.yml](docker-compose.yml) as a starting point. Set the server identity and password, then run `docker compose up -d --build`.
 
-```yml
-services:
-  core-keeper-ds-docker:
-    image: devidian/core-keeper-dedicated:latest
-    container_name: core-keeper-ds-docker
-    restart: unless-stopped
-    environment:
-      # Game ID to use for the server. Need to be at least 23 characters and alphanumeric, excluding Y,y,x,0,O. Empty or not valid means a new ID will be generated at start.
-      - GAME_ID=""
-      # Save file location. If not set it defaults to a subfolder named "DedicatedServer" at the default Core Keeper save location.
-      - DATA_PATH=""
-      # The name to use for the server.
-      - SERVER_NAME="Core Keeper Dedicated Docker Server"
-      # Which world index to use.
-      - WORLD_ID=0
-      # The seed to use for a new world. Set to 0 to generate random seed.
-      - WORLD_SEED=0
-      # Whether to use normal (0) or hard (1) mode for world.
-      - WORLD_MODE=normal
-      # Maximum number of players that will be allowed to connect to server.
-      - MAX_PLAYERS=4
-      # server port
-      - SERVER_PORT=17000
-      # 1 - 4 
-      - WORLD_SIZE=1
-      - WORLD_NAME="Default Docker World"
-      - SERVER_PUBLIC=false
-      - SERVER_PASSWORD=defaultPassword
-    # If you dont like to use a directory on the host just comment volumes section
-    volumes:
-      # left side: your docker-host machine
-      # right side: the paths in the image (!!do not change!!)
-      - /appdata/core-keeper/dedicated:/home/steam/core-keeper-dedicated
-```
+The image defaults `DATA_PATH` to `/home/steam/core-keeper-dedicated/saves`. The example Compose file instead uses a separate bind mount:
 
-and run `docker-compose up -d`.
+| Host | Container | Purpose |
+| --- | --- | --- |
+| `/appdata/core-keeper/dedicated` | `/home/steam/core-keeper-dedicated` | Server installation |
+| `/appdata/core-keeper/data` | `/home/steam/core-keeper-data` | Worlds and server data |
 
-# Issues, suggestions & contribution
+Keep the data mount when recreating the container. Back up `/appdata/core-keeper/data` before upgrading the server or activating content. `DATA_PATH` must be an absolute, writable path; the entrypoint refuses relative values. In Compose list syntax, `- DATA_PATH=""` passes literal quote characters and is not an empty value. Prefer the mapping syntax shown in the example.
 
-Please use [GitHub](https://github.com/Devidian/docker-core-keeper/issues)
+The Compose example gives the server two minutes to stop and finish saving before Docker forcefully terminates it.
+
+For the strato.V80 host, [ops/corekeeper-backup.sh](ops/corekeeper-backup.sh) and its systemd timer copy the complete data directory to `/appdata/core-keeper/backups/daily` at 03:30 UTC each day. The script checks that world 2 stayed unchanged during the copy. The backups have no automatic deletion policy; monitor available disk space.
+
+The `WORLD_ID` is an index within `DATA_PATH`, not a host path. Check that the expected world save exists there before launching an older world with a new server version.
+
+## Activate content on an existing world
+
+The available bundles and their names depend on the installed dedicated server version. Read `ARGUMENTS.txt` in the server installation before choosing bundles. Server version `1.3.0.6-6e73` (Steam build `25825323`) lists `AbioticFactor`, `BiomeStatues`, `GiantCicadaBossDungeon`, `GuaranteedOases`, `LegendaryScepterDungeon`, `MossBiomeDungeons`, and `NatureBiomeCicadas`.
+
+1. Stop the server and back up its data directory.
+2. Add `ACTIVATE_CONTENT_BUNDLES` with the desired names from that version's `ARGUMENTS.txt` to `environment` for the intended world, then start the server.
+3. Check the server logs and confirm the world save file was written after activation. A world may not save until a player joins. Then remove the environment entry for subsequent starts and verify the bundles remain active.
+
+The server's `-activatecontent` operation is permanent for that world. Some bundles may overwrite explored areas. `ACTIVATE_ALL_CONTENT: "true"` is also available as an explicit opt-in, but keeping it enabled can activate bundles introduced by later updates. Do not set both environment variables together. Neither activation option is enabled by default.
+
+Additional dedicated-server arguments can still be passed to the container command. The documented ENV variables are preferable for regular Compose use.
+
+If SteamCMD cannot update but a server executable is already installed, the entrypoint logs a warning and starts that installed version. Check the game version in the startup log. A stale Steam app manifest can cause `Error! App '1963720' state is 0x6`; after backing up the installation and world data, moving `steamapps/appmanifest_1963720.acf` aside allows SteamCMD to perform a clean download on the next start.

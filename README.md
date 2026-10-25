@@ -2,6 +2,8 @@
 
 A dedicated Core Keeper server based on `cm2network/steamcmd:root`. The entrypoint updates the dedicated server with SteamCMD before each launch.
 
+Pushes to `master` build and publish the `linux/amd64` image to Docker Hub as `devidian/core-keeper-dedicated:latest` and `:sha-<commit>`. The workflow can also be started manually. It uses the repository secrets `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`.
+
 ## Run the server
 
 Use [docker-compose.yml](docker-compose.yml) as a starting point. Set the server identity and password, then run `docker compose up -d --build`.
